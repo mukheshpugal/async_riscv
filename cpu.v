@@ -6,7 +6,8 @@ module cpu (
     output [31:0] daddr,
     input [31:0] drdata,
     output [31:0] dwdata,
-    output [3:0] dwe
+    output [3:0] dwe,
+    output done
 );
     // Wires for ALU
     wire [4:0] rs1, rs2, rd;
