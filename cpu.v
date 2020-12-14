@@ -7,7 +7,7 @@ module cpu (
     input [31:0] drdata,
     output [31:0] dwdata,
     output [3:0] dwe,
-    output done
+    output reg done
 );
     // Wires for ALU
     wire [4:0] rs1, rs2, rd;
@@ -31,7 +31,7 @@ module cpu (
         .we(regWe),
         .wdata(rvout),
         .rv1(rv1),
-        .rv2(r_rv2)     // Decoder selects between this and Imm
+        .rv2(r_rv2)
     );
 
     // Decoder for ALU instructions
@@ -102,6 +102,10 @@ module cpu (
                    (idata[3:2] == 2'b01) ? rv1 + {{20{idata[31]}}, idata[31:20]} :
                    (idata[3:2] == 2'b11) ? iaddr + ({{13{idata[31]}}, idata[19:12], idata[20], idata[30:21]} << 1) :
                    0;
+
+    // Logic for detecting end of instruction
+    // done is a reg <- need to self reset done
+
 
     always @(posedge clk) begin
         if (reset)
