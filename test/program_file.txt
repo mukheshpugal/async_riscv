@@ -1,3 +1,0 @@
-test_tb.v
-block.v
-delay.v

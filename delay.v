@@ -1,12 +1,12 @@
 module delay 
-	#(parameter length=10)
+	#(parameter length=12)
 	(
 	input in1,
 	input in2,
 	output reg out
 	);
 
-	reg [9:0] inter;
+	reg [length-1:0] inter;
 	genvar i;
 
 	always @(in1, in2) begin

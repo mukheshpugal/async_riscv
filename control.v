@@ -1,15 +1,12 @@
 module control(
-	input trigger,
+	input reset,
 	input done,
-	input maxCount,
-	output clk,
-	output finish
+	output clk
 	);
 
 	reg clk, planB, doneReset;
 	wire planBreset;
 	wire doneActual;
-	reg [31:0] instructionCounter;
 
 	delay d(
 		.in1(planB),
@@ -18,19 +15,17 @@ module control(
 		);
 
 	assign doneActual = done | doneReset;
-	assign finish = (instructionCounter >= maxCount);
 
 	always @(posedge planBreset or negedge doneActual) begin
 		#1 clk <= 1;
 		#2 planB <= 0;
 	end
 
-	always @(negedge trigger) begin
-		doneReset = 0;
+	always @(negedge reset) begin
+		#2 doneReset = 0;
 	end
 
 	always @(posedge clk) begin
-		instructionCounter = instructionCounter + 1;
 		#6 clk <= 0;
 	end
 
@@ -38,11 +33,10 @@ module control(
 		#2 planB <= 1;
 	end
 
-	initial begin
+	always @(reset) begin
 		clk = 0;
 		planB = 0;
 		doneReset = 1;
-		instructionCounter = 0;
 	end
 
 endmodule

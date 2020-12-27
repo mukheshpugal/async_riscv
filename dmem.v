@@ -21,7 +21,7 @@ module dmem (
     assign a = daddr[31:2];
     
     // Selecting bytes to be done inside CPU
-    assign drdata = { mem3[a], mem2[a], mem1[a], mem0[a]};  
+    assign #15 drdata = { mem3[a], mem2[a], mem1[a], mem0[a]};  
 
     always @(posedge clk) begin
         if (dwe[3]) mem3[a] = dwdata[31:24];

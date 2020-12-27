@@ -1,10 +1,10 @@
 `timescale 1ns/1ps
 
-module testbench ();
+module testbench();
 
-	reg reset, trigger;
-    wire clk, done, finish;
-    wire [31:0] iaddr, idata, daddr, drdata, dwdata, maxCount;
+	reg reset;
+    wire clk, done;
+    wire [31:0] iaddr, idata, daddr, drdata, dwdata;
     wire [3:0] dwe;
 
     // To check reg values
@@ -12,11 +12,9 @@ module testbench ();
     reg [31:0] dtmp, exp_reg;
 
     control u0(
-        .trigger(trigger),
+        .reset(reset),
         .done(done),
-        .maxCount(maxCount),
-        .clk(clk),
-        .finish(finish)
+        .clk(clk)
 	);
 
     cpu u1(
@@ -45,19 +43,20 @@ module testbench ();
     );
 
     initial begin
-    	$dumpfile("cpu_tb.vcd");
-    	$dumpvars(0, cpu_tb);
-        $display("RUNNING TEST FROM ", `TESTDIR);
-    	maxCount = 10000;
+    	$dumpfile("testbench.vcd");
+    	$dumpvars(0, testbench);
+        reset = 1;
         #100
-        trigger = 1;
-        #2
-        trigger = 0;
-    	@posedge(finish);
-
-
+        reset = 0;
         log_file = $fopen("cpu_tb.log", "a");
         exp_file = $fopen({`TESTDIR,"/expout.txt"}, "r");
+
+        @(posedge clk);
+        for (i=0; i<100; i=i+1) begin
+            @(posedge clk);
+        end
+
+        $display("RUNNING TEST FROM ", `TESTDIR);
         fail = 0;
         // Dump top dmem
         for (i=0; i<32; i=i+1) begin
@@ -71,11 +70,8 @@ module testbench ();
 
         if(fail != 0) begin
             $display("FAILED. %d registers do not match.\n", fail);
-            $fwrite(log_file, "FAIL\n");
-        end else begin
-            $fwrite(log_file, "PASS\n");
         end
-    	$finish
+    	$finish;
     end
 
 endmodule
