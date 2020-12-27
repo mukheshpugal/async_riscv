@@ -1,0 +1,8 @@
+testbench.v
+imem.v
+dmem.v
+control.v
+delay.v
+cpu.v
+alu32.v
+regfile.v

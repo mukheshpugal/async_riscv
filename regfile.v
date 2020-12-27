@@ -19,14 +19,13 @@ module regfile(
     end
 
     // rv1, rv2 are combinational outputs - they will update whenever rs1, rs2 change
-    assign rv1 = mem[rs1];
-    assign rv2 = mem[rs2];
+    assign #5 rv1 = mem[rs1];
+    assign #5 rv2 = mem[rs2];
 
     // on clock edge, if we=1, regfile entry for rd will be updated
     always @(posedge clk) begin
         if (we)
             mem[rd] <= wdata;
-        /////////////////////////////// MIGHT FAIL WHILE SYNTHRSIZING ///////////////////////////
         mem[0] <= 0;
     end
 
