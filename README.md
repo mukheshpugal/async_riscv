@@ -52,7 +52,7 @@ In the verilog model, an always block is used for this purpose. It triggers a fl
 ## Benchmarking
 The same set of tests used for the single cycle synchronous CPU assignment was used to verify the working of this CPU. The following table lists time taken by both CPUs for executing the tests with the same delay settings. The time is measured using gtkwave. Initial 100 ns for reset is not included.
 
-|test|instruction count|asynchronous CPU (ns)|synchronous CPU (ns)|% performance increase|
+|test|instruction count|synchronous CPU (ns)|asynchronous CPU (ns)|% performance increase|
 |--|--|--|--|--|
 |1|96|5664|3781|49.8|
 |2|59|3068|1856|65.3|
