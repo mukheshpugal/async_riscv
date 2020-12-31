@@ -52,7 +52,7 @@ module testbench();
         exp_file = $fopen({`TESTDIR,"/expout.txt"}, "r");
 
         @(posedge clk);
-        for (i=0; i<100; i=i+1) begin
+        for (i=0; i<200; i=i+1) begin
             @(posedge clk);
         end
 

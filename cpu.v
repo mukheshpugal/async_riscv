@@ -105,8 +105,9 @@ module cpu (
 
     // Logic for detecting end of instruction
     reg jmpDone, stDone, aluDone;
-    reg [1:0] match, jmpMatch, stMatch, aluMatch;
+    reg match, jmpMatch, stMatch, aluMatch;
 
+    // Detecting changes
     always @(rd, rvout) begin
         if (match == aluMatch)
             aluDone <= 1;
@@ -123,10 +124,22 @@ module cpu (
         #6 jmpDone <= 0;
     end
 
+    // Choosing done signal based on instruction type
     assign done = (idata[6:4] == 3'b110) ? jmpDone :
                   (idata[6:4] == 3'b010) ? stDone :
                   (regWe) ? aluDone :
                   0;
+
+    // To make sure done signals for previous instruction don't mess with the current instruction
+    always @(posedge clk) begin
+        #20 jmpMatch = jmpMatch + 1;
+    end
+    always @(jmpMatch) begin
+        stMatch = stMatch + 1;
+    end
+    always @(jmpMatch) begin
+        #15 aluMatch = aluMatch + 1;
+    end
 
     always @(reset) begin
         iaddr <= -4;
@@ -145,15 +158,6 @@ module cpu (
             iaddr <= jaddr;
         else
             iaddr <= iaddr + 4;
-    end
-    always @(posedge clk) begin
-        #20 jmpMatch = jmpMatch + 1;
-    end
-    always @(jmpMatch) begin
-        stMatch = stMatch + 1;
-    end
-    always @(jmpMatch) begin
-        #15 aluMatch = aluMatch + 1;
     end
 
 endmodule

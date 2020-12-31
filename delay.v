@@ -1,5 +1,5 @@
 module delay 
-	#(parameter length=12)
+	#(parameter length=9)
 	(
 	input in1,
 	input in2,
